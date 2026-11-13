@@ -13,7 +13,7 @@ import { getProducts } from "@/lib/storage";
 import { getSales } from "@/lib/salesStorage";
 import { getPurchases } from "@/lib/purchaseStorage";
 import { getCashTransactions } from "@/lib/cashStorage";
-import { geminiModel } from "@/lib/ai";
+import { generateHybridAnswer } from "@/lib/ai";
 
 export default function AIAssistant() {
   const [products] = useState<Product[]>(() => getProducts());
@@ -325,8 +325,8 @@ Answer using only the supplied business data. Be accurate, transparent and pract
 `;
 
     try {
-      const result = await geminiModel.generateContent(prompt);
-      const responseText = result.response.text();
+     const result = await generateHybridAnswer(prompt);
+const responseText = result.text;
 
       if (!responseText.trim()) {
         throw new Error("Gemini returned an empty response.");
@@ -361,7 +361,7 @@ Answer using only the supplied business data. Be accurate, transparent and pract
           practical recommendations.
         </p>
         <div className="mt-4 inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-medium">
-          ● Gemini AI · Cloud-powered
+          ● Gemini AI · Hybrid (On-device + Cloud)
         </div>
       </section>
 
@@ -526,12 +526,12 @@ Answer using only the supplied business data. Be accurate, transparent and pract
         )}
       </section>
 
-      <p className="text-center text-xs leading-5 text-slate-400">
-        Gemini AI processes your question and the business summary
-        shown to it through Google&apos;s cloud service. Do not include
-        passwords, payment details or other sensitive personal information.
-        If Gemini is unavailable, ZevaSewa uses its local assistant as a fallback.
-      </p>
+     <p className="text-center text-xs leading-5 text-slate-400">
+  Your question and business summary may be processed on your device or
+  sent to Google Cloud, depending on model availability. Do not include
+  passwords, payment details or other sensitive personal information.
+  If Gemini is unavailable, ZevaSewa uses its local assistant as a fallback.
+</p>
     </div>
   );
 }
